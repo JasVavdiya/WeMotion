@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369547636653",
+    "project_id": "wemotion-91677",
+    "storage_bucket": "wemotion-91677.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369547636653:android:c11f738e1f1ff4b18ffb24",
+        "android_client_info": {
+          "package_name": "com.persistventure.wemo.wemotions"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_yDkKU5BEpQtXWqjalfRvKk172la3KRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
