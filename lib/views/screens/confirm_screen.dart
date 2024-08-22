@@ -23,90 +23,114 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   TextEditingController _songController = TextEditingController();
   TextEditingController _captionController = TextEditingController();
   UploadVideoController uploadVideoController =
-      Get.put(UploadVideoController());
+  Get.put(UploadVideoController());
+
+  bool _isLoading = false; // Flag to track loading state
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      controller = VideoPlayerController.file(widget.videoFile);
-    });
-    controller.initialize();
-    controller.videoPlayerOptions?.webOptions?.allowContextMenu;
-    controller.play();
-    controller.setVolume(1);
-    controller.setLooping(true);
+    controller = VideoPlayerController.file(widget.videoFile)
+      ..initialize().then((_) {
+        setState(() {}); // Rebuild after initialization
+        controller.play();
+        controller.setVolume(1);
+        controller.setLooping(true);
+      });
   }
 
   @override
   void dispose() {
-    super.dispose();
     controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _uploadVideo() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    await uploadVideoController.uploadVideo(
+      _songController.text,
+      _captionController.text,
+      widget.videoPath,
+    );
+    setState(() {
+      _isLoading = false; // Hide loading indicator
+    });
+    Get.back(); // Navigate back to the previous screen
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 1.5,
-              child: VideoPlayer(controller),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    width: MediaQuery.of(context).size.width - 20,
-                    child: TextInputField(
-                      controller: _songController,
-                      labelText: 'Song Name',
-                      icon: Icons.music_note,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    width: MediaQuery.of(context).size.width - 20,
-                    child: TextInputField(
-                      controller: _captionController,
-                      labelText: 'Caption',
-                      icon: Icons.closed_caption,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                      onPressed: () => uploadVideoController.uploadVideo(
-                          _songController.text,
-                          _captionController.text,
-                          widget.videoPath),
-                      child: const Text(
-                        'Share!',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  child: controller.value.isInitialized
+                      ? AspectRatio(aspectRatio: controller.value.aspectRatio,child: VideoPlayer(controller))
+                      : const CircularProgressIndicator(), // Show loading indicator while video initializes
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        width: MediaQuery.of(context).size.width - 20,
+                        child: TextInputField(
+                          controller: _songController,
+                          labelText: 'Song Name',
+                          icon: Icons.music_note,
                         ),
-                      ))
-                ],
-              ),
-            )
-          ],
-        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        width: MediaQuery.of(context).size.width - 20,
+                        child: TextInputField(
+                          controller: _captionController,
+                          labelText: 'Caption',
+                          icon: Icons.closed_caption,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: _uploadVideo,
+                        child: const Text(
+                          'Share!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(), // Show loading indicator during upload
+            ),
+        ],
       ),
     );
   }

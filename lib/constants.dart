@@ -12,7 +12,7 @@ List pages = [
   VideoScreen(),
   SearchScreen(),
   const AddVideoScreen(),
-  Text('Messages Screen'),
+  Center(child: Text('Tranding WeMotion! Comming soon')),
   ProfileScreen(uid: authController.user.uid),
 ];
 

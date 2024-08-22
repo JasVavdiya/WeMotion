@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
@@ -9,21 +7,17 @@ import 'package:wemotions/models/video.dart';
 
 class UploadVideoController extends GetxController {
   _compressVideo(String videoPath) async {
-    try{
       final compressedVideo = await VideoCompressV2.compressVideo(
         videoPath,
         quality: VideoQuality.MediumQuality,
       );
       print(compressedVideo.toString());
       return compressedVideo!.file;
-    }catch(e){
-      print("/////////"+e.toString());
-    }
   }
 
   Future<String> _uploadVideoToStorage(String id, String videoPath) async {
     Reference ref = firebaseStorage.ref().child('videos').child(id);
-    UploadTask uploadTask = ref.putFile(_compressVideo(videoPath));
+    UploadTask uploadTask = ref.putFile(await _compressVideo(videoPath));
     TaskSnapshot snap = await uploadTask;
     String downloadUrl = await snap.ref.getDownloadURL();
     return downloadUrl;
