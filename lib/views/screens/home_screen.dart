@@ -1,12 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wemotions/constants.dart';
 import 'package:wemotions/views/screens/confirm_screen.dart';
 import 'package:wemotions/views/widgets/custom_icon.dart';
+
+import '../../constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -90,70 +90,92 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    pageIdx = 0;
-                  });
-                },
-                // child: Icon(
-                //   Icons.home,
-                //   color: pageIdx == 0 ? Colors.blue : Colors.white,
-                //   size: 30,
-                // ),
-                child: Text("We",style: TextStyle(color: pageIdx == 0 ? Colors.blue : Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    pageIdx = 1;
-                  });
-                },
-                child: Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: pageIdx == 1 ? Colors.blue : Colors.white,
-                  size: 20,
+      floatingActionButtonLocation: CustomFloatingActionButtonLocation(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.transparent,
+        onPressed: () {
+          showOptionsDialog(context);
+        },
+        child: CustomIcon(),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        padding: EdgeInsets.only(left: 30, right: 30),
+        notchMargin: 5,
+        shape: CircularNotchedRectangle(),
+        color: Colors.grey.shade900,
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  pageIdx = 0;
+                });
+              },
+              child: Text(
+                "We",
+                style: TextStyle(
+                  color: pageIdx == 0 ? Colors.blue : Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  showOptionsDialog(context);
-                },
-                child: CustomIcon(),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  pageIdx = 1;
+                });
+              },
+              child: Icon(
+                FontAwesomeIcons.magnifyingGlass,
+                color: pageIdx == 1 ? Colors.blue : Colors.white,
+                size: 22,
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    pageIdx = 3;
-                  });
-                },
-                child: FaIcon(
-                  CupertinoIcons.flame,
-                  color: pageIdx == 3 ? Colors.red[600] : Colors.white,
-                  size: 24,
-                ),
+            ),
+            SizedBox(width: 45),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  pageIdx = 3;
+                });
+              },
+              child: FaIcon(
+                CupertinoIcons.flame,
+                color: pageIdx == 3 ? Colors.red[600] : Colors.white,
+                size: 26,
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    pageIdx = 4;
-                  });
-                },
-                child: Icon(
-                  FontAwesomeIcons.userAstronaut,
-                  color: pageIdx == 4 ? Colors.blue : Colors.white,
-                  size: 20,
-                ),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  pageIdx = 4;
+                });
+              },
+              child: Icon(
+                FontAwesomeIcons.userAstronaut,
+                color: pageIdx == 4 ? Colors.blue : Colors.white,
+                size: 22,
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
       body: pages[pageIdx],
     );
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    // Center the FAB horizontally
+    final double fabX = (scaffoldGeometry.scaffoldSize.width - scaffoldGeometry.floatingActionButtonSize.width) / 2;
+
+    // Position it slightly lower than the default
+    final double fabY = scaffoldGeometry.scaffoldSize.height - 60 - scaffoldGeometry.floatingActionButtonSize.height / 4;
+
+    return Offset(fabX, fabY);
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../controllers/comment_controller.dart';
-import '../../models/comment.dart';
 import '../widgets/comment_widget.dart';
 
 class CommentSection extends StatefulWidget {
@@ -29,8 +28,6 @@ class _CommentSectionState extends State<CommentSection> {
   bool isRecordingCompleted = false;
   bool isLoading = true;
   late Directory appDirectory;
-  Comment? parentComment; // Track the comment being replied to
-  String? replyDisplayName; // Track the comment being replied to
 
   @override
   void initState() {
@@ -80,16 +77,7 @@ class _CommentSectionState extends State<CommentSection> {
           path = await recorderController.stop(false);
           if (path != null) {
             isRecordingCompleted = true;
-
-            if (parentComment != null) {
-              // Posting a reply to a specific comment
-              commentController.replyToComment(parentComment!, path!);
-              parentComment = null; // Reset parent comment
-            } else {
-              // Posting a new comment
-              commentController.postComment(path!);
-            }
-
+            commentController.postComment(path!);
             Get.snackbar(
                 'Audio posted successfully',
                 "enjoy!"
@@ -110,18 +98,6 @@ class _CommentSectionState extends State<CommentSection> {
     }
   }
 
-  void _onReply(Comment comment) {
-    setState(() {
-      parentComment = comment;
-    });
-  }
-
-  void _onReplyDisplayName(String _replayDisplayName) {
-    setState(() {
-      replyDisplayName = _replayDisplayName;
-    });
-  }
-
   void _refreshWave() {
     if (isRecording) recorderController.refresh();
   }
@@ -130,41 +106,6 @@ class _CommentSectionState extends State<CommentSection> {
   Widget build(BuildContext context) {
     commentController.updatePostId(widget.id);
     return Scaffold(
-      appBar: parentComment != null ? PreferredSize(
-        preferredSize: Size.fromHeight(40.0), // Set the height of the AppBar
-        child: SafeArea(
-          child: Container(
-            height: 40,
-            padding: EdgeInsets.only(left: 10,right: 10),
-            color: Colors.blue, // Background color of the Container
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Replying to @'+replyDisplayName!,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(onPressed: (){
-                  setState(() {
-                    parentComment = null;
-                  });
-                },icon: Icon(Icons.close))
-              ]
-            ),
-          ),
-        ),
-      ) : PreferredSize(
-        preferredSize: Size.fromHeight(0.0), // Set the height of the AppBar
-        child: SafeArea(
-          child: Container(
-            color: Colors.blue, // Background color of the Container
-          ),
-        ),
-      ),
       backgroundColor: Colors.grey[900],
       body: isLoading
           ? const Center(
@@ -181,7 +122,7 @@ class _CommentSectionState extends State<CommentSection> {
                   itemCount: commentController.comments.length,
                   itemBuilder: (context, index) {
                     final comment = commentController.comments[index];
-                    return CommentWidget(comment: comment,onReply: _onReply,onReplyDisplayName: _onReplyDisplayName,onreplyDisplayNameString:replyDisplayName);
+                    return CommentWidget(comment: comment);
                   },
                 ),
               ),
