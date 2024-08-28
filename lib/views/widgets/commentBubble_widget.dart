@@ -120,7 +120,7 @@ class _CommentBubbleWidgetState extends State<CommentBubbleWidget> {
                         ),
                         AudioFileWaveforms(
                           size: Size(
-                              MediaQuery.of(context).size.width / 1.5,
+                              MediaQuery.of(context).size.width / 1.6,
                               70),
                           playerController: controller,
                           waveformType: WaveformType.fitWidth,

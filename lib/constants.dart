@@ -3,16 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:wemotions/views/screens/add_video_screen.dart';
+import 'package:wemotions/views/screens/first_screen.dart';
 import 'package:wemotions/views/screens/profile_screen.dart';
 import 'package:wemotions/views/screens/search_screen.dart';
+import 'package:wemotions/views/screens/trending_screen.dart';
 import 'package:wemotions/views/screens/video_screen.dart';
 
 import 'controllers/auth_controller.dart';
 List pages = [
   VideoScreen(),
-  SearchScreen(),
+  FirstScreen(),
   const AddVideoScreen(),
-  Center(child: Text('Tranding WeMotion! Comming soon')),
+  TrendingScreen(),
   ProfileScreen(uid: authController.user.uid),
 ];
 

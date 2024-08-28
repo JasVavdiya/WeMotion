@@ -134,7 +134,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                                 highlightColor: Colors.transparent,
                               ),
                               AudioFileWaveforms(
-                                size: Size(MediaQuery.of(context).size.width / 1.5, 70),
+                                size: Size(MediaQuery.of(context).size.width / 1.6, 70),
                                 playerController: controller,
                                 waveformType:WaveformType.fitWidth,
                                 playerWaveStyle: playerWaveStyle,

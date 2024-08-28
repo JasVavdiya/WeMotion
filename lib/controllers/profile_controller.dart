@@ -122,4 +122,31 @@ class ProfileController extends GetxController {
     _user.value.update('isFollowing', (value) => !value);
     update();
   }
+
+  Future<List<Map<String, String>>> getHastiUsernames() async {
+    List<Map<String, String>> usernames = [];
+
+    try {
+      // Access the Firestore instance
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Query the users collection where is_hasti is true
+      QuerySnapshot querySnapshot = await firestore
+          .collection('users')
+          .where('is_hasti', isEqualTo: true)
+          .get();
+
+      // Iterate over the documents and add usernames with UIDs to the list
+      for (var doc in querySnapshot.docs) {
+        usernames.add({
+          'uid': doc.id,
+          'username': doc['username'],
+        });
+      }
+    } catch (e) {
+      print('Error fetching usernames: $e');
+    }
+
+    return usernames;
+  }
 }

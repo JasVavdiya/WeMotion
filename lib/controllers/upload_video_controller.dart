@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
@@ -7,17 +9,22 @@ import 'package:wemotions/models/video.dart';
 
 class UploadVideoController extends GetxController {
   _compressVideo(String videoPath) async {
+    try{
       final compressedVideo = await VideoCompressV2.compressVideo(
         videoPath,
         quality: VideoQuality.MediumQuality,
       );
-      print(compressedVideo.toString());
+      print("Compressed video" + compressedVideo!.file.toString());
       return compressedVideo!.file;
+    }catch(e){
+      print("/////////"+e.toString());
+    }
   }
 
   Future<String> _uploadVideoToStorage(String id, String videoPath) async {
     Reference ref = firebaseStorage.ref().child('videos').child(id);
-    UploadTask uploadTask = ref.putFile(await _compressVideo(videoPath));
+    File mediaFile = await _compressVideo(videoPath);
+    UploadTask uploadTask = ref.putFile(mediaFile);
     TaskSnapshot snap = await uploadTask;
     String downloadUrl = await snap.ref.getDownloadURL();
     return downloadUrl;
@@ -37,15 +44,15 @@ class UploadVideoController extends GetxController {
   }
 
   // upload video
-  uploadVideo(String songName, String caption, String videoPath) async {
+  uploadVideo(String songName, String caption, String videoPath, List mentions) async {
     try {
       String uid = firebaseAuth.currentUser!.uid;
-      print(uid);
       DocumentSnapshot userDoc =
       await firestore.collection('users').doc(uid).get();
       // get id
       var allDocs = await firestore.collection('videos').get();
       int len = allDocs.docs.length;
+      print("Uid sneh : " + uid);
       String videoUrl = await _uploadVideoToStorage("Video $len", videoPath);
       String thumbnail = await _uploadImageToStorage("Video $len", videoPath);
       Video video = Video(
@@ -58,6 +65,7 @@ class UploadVideoController extends GetxController {
         songName: songName,
         caption: caption,
         videoUrl: videoUrl,
+        mentions: mentions,
         profilePhoto: (userDoc.data()! as Map<String, dynamic>)['profilePhoto'],
         thumbnail: thumbnail,
       );
