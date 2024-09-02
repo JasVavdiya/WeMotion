@@ -74,8 +74,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 },
                 child: Icon(
-                  FontAwesomeIcons.userAstronaut,
+                  FontAwesomeIcons.newspaper,
                   color: pageIdx == 4 ? Colors.blue : Colors.white,
+                  size: 20,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    pageIdx = 5;
+                  });
+                },
+                child: Icon(
+                  FontAwesomeIcons.userAstronaut,
+                  color: pageIdx == 5 ? Colors.blue : Colors.white,
                   size: 20,
                 ),
               ),

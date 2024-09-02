@@ -4,9 +4,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:wemotions/views/screens/add_video_screen.dart';
 import 'package:wemotions/views/screens/first_screen.dart';
+import 'package:wemotions/views/screens/news_feed.dart';
 import 'package:wemotions/views/screens/profile_screen.dart';
 import 'package:wemotions/views/screens/search_screen.dart';
 import 'package:wemotions/views/screens/trending_screen.dart';
+import 'package:wemotions/views/screens/upload_screen.dart';
 import 'package:wemotions/views/screens/video_screen.dart';
 
 import 'controllers/auth_controller.dart';
@@ -14,7 +16,9 @@ List pages = [
   VideoScreen(),
   FirstScreen(),
   const AddVideoScreen(),
-  TrendingScreen(),
+  // TrendingScreen(),
+  UploadNewsScreen(),
+  NewsScreen(),
   ProfileScreen(uid: authController.user.uid),
 ];
 

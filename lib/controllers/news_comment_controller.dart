@@ -5,23 +5,23 @@ import 'package:get/get.dart';
 import 'package:wemotions/constants.dart';
 import 'package:wemotions/models/comment.dart';
 
-class CommentController extends GetxController {
+class NewsCommentController extends GetxController {
   final Rx<List<Comment>> _comments = Rx<List<Comment>>([]);
   List<Comment> get comments => _comments.value;
 
-  String _postId = "";
+  String _newsId = "";
   Comment? parentComment; // Track the comment being replied to
 
-  updatePostId(String id, String type) {
-    _postId = id;
-    getComment(type);
+  updateNewsId(String id) {
+    _newsId = id;
+    getComment();
   }
 
-  getComment(String type) async {
+  getComment() async {
     _comments.bindStream(
       firestore
-          .collection(type == 'videos' ? 'videos' : 'news')
-          .doc(_postId)
+          .collection('news')
+          .doc(_newsId)
           .collection('comments')
           .snapshots()
           .map(
@@ -45,7 +45,7 @@ class CommentController extends GetxController {
     return downloadUrl;
   }
 
-  postComment(String audioPath, String type) async {
+  postComment(String audioPath) async {
     try {
       if (audioPath.isNotEmpty) {
         DocumentSnapshot userDoc = await firestore
@@ -54,13 +54,13 @@ class CommentController extends GetxController {
             .get();
 
         var allDocs = await firestore
-            .collection(type == 'videos' ? 'videos' : 'news')
-            .doc(_postId)
+            .collection('news')
+            .doc(_newsId)
             .collection('comments')
             .get();
         int len = allDocs.docs.length;
 
-        String audioUrl = await _uploadAudioToStorage(type == 'videos' ? 'Video_$len' : 'News_$len', audioPath);
+        String audioUrl = await _uploadAudioToStorage("News_$len", audioPath);
 
         Comment comment = Comment(
           username: (userDoc.data()! as dynamic)['name'],
@@ -74,8 +74,8 @@ class CommentController extends GetxController {
         );
 
         await firestore
-            .collection(type == 'videos' ? 'videos' : 'news')
-            .doc(_postId)
+            .collection('news')
+            .doc(_newsId)
             .collection('comments')
             .doc('comment_$len')
             .set(
@@ -83,8 +83,8 @@ class CommentController extends GetxController {
         );
 
         DocumentSnapshot doc =
-        await firestore.collection(type == 'videos' ? 'videos' : 'news').doc(_postId).get();
-        await firestore.collection(type == 'videos' ? 'videos' : 'news').doc(_postId).update({
+        await firestore.collection('news').doc(_newsId).get();
+        await firestore.collection('news').doc(_newsId).update({
           'commentCount': (doc.data()! as dynamic)['commentCount'] + 1,
         });
 
@@ -102,7 +102,6 @@ class CommentController extends GetxController {
     }
   }
 
-
   void replyToComment(Comment parentComment, String audioPath) async {
     try {
       if (audioPath.isEmpty) {
@@ -113,8 +112,8 @@ class CommentController extends GetxController {
 
       // Ensure parentComment exists in Firestore
       DocumentReference parentDocRef = firestore
-          .collection('videos')
-          .doc(_postId)
+          .collection('news')
+          .doc(_newsId)
           .collection('comments')
           .doc(parentComment.id);
 
@@ -132,8 +131,8 @@ class CommentController extends GetxController {
           .get();
 
       var allDocs = await firestore
-          .collection('videos')
-          .doc(_postId)
+          .collection('news')
+          .doc(_newsId)
           .collection('comments')
           .get();
       int len = allDocs.docs.length;
@@ -155,8 +154,8 @@ class CommentController extends GetxController {
 
       // Update the parent comment with the new reply
       await firestore
-          .collection('videos')
-          .doc(_postId)
+          .collection('news')
+          .doc(_newsId)
           .collection('comments')
           .doc(parentComment.id)
           .update({
@@ -176,16 +175,16 @@ class CommentController extends GetxController {
   likeComment(String id) async {
     var uid = authController.user.uid;
     DocumentSnapshot doc = await firestore
-        .collection('videos')
-        .doc(_postId)
+        .collection('news')
+        .doc(_newsId)
         .collection('comments')
         .doc(id)
         .get();
 
     if ((doc.data()! as dynamic)['likes'].contains(uid)) {
       await firestore
-          .collection('videos')
-          .doc(_postId)
+          .collection('news')
+          .doc(_newsId)
           .collection('comments')
           .doc(id)
           .update({
@@ -193,8 +192,8 @@ class CommentController extends GetxController {
       });
     } else {
       await firestore
-          .collection('videos')
-          .doc(_postId)
+          .collection('news')
+          .doc(_newsId)
           .collection('comments')
           .doc(id)
           .update({

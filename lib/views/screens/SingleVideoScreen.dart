@@ -183,6 +183,7 @@ class SingleVideoScreen extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) => CommentSection(
                                             id: videoList[index]['videoId'],
+                                            type: 'videos',
                                           ),
                                         ),
                                       );

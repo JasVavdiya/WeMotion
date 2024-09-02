@@ -10,10 +10,11 @@ import '../widgets/comment_widget.dart';
 
 class CommentSection extends StatefulWidget {
   final String id;
+  final String type;
 
   CommentSection({
     Key? key,
-    required this.id,
+    required this.id, required this.type,
   }) : super(key: key);
 
   @override
@@ -87,7 +88,7 @@ class _CommentSectionState extends State<CommentSection> {
               parentComment = null; // Reset parent comment
             } else {
               // Posting a new comment
-              commentController.postComment(path!);
+              commentController.postComment(path!, widget.type);
             }
 
             Get.snackbar(
@@ -128,7 +129,7 @@ class _CommentSectionState extends State<CommentSection> {
 
   @override
   Widget build(BuildContext context) {
-    commentController.updatePostId(widget.id);
+    commentController.updatePostId(widget.id, widget.type);
     return Scaffold(
       appBar: parentComment != null ? PreferredSize(
         preferredSize: Size.fromHeight(40.0), // Set the height of the AppBar

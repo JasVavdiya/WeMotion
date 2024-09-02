@@ -9,10 +9,11 @@ import '../widgets/comment_widget.dart';
 
 class CommentSection extends StatefulWidget {
   final String id;
+  final String type;
 
   CommentSection({
     Key? key,
-    required this.id,
+    required this.id, required this.type,
   }) : super(key: key);
 
   @override
@@ -77,7 +78,7 @@ class _CommentSectionState extends State<CommentSection> {
           path = await recorderController.stop(false);
           if (path != null) {
             isRecordingCompleted = true;
-            commentController.postComment(path!);
+            commentController.postComment(path!,widget.type);
             Get.snackbar(
                 'Audio posted successfully',
                 "enjoy!"
@@ -104,7 +105,7 @@ class _CommentSectionState extends State<CommentSection> {
 
   @override
   Widget build(BuildContext context) {
-    commentController.updatePostId(widget.id);
+    commentController.updatePostId(widget.id, widget.type);
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: isLoading

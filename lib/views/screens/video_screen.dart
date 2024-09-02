@@ -210,6 +210,7 @@ class VideoScreen extends StatelessWidget {
                                   MaterialPageRoute(
                                     builder: (context) => CommentSection(
                                       id: data.id,
+                                      type: 'videos',
                                     ),
                                   ),
                                 ),
