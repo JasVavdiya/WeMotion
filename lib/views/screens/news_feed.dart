@@ -26,7 +26,7 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('News Motion')),
+      appBar: AppBar(backgroundColor: Colors.black,title: Text('News Motion')),
       body: FutureBuilder<List<News>>(
         future: _newsFuture,
         builder: (context, snapshot) {

@@ -17,10 +17,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
+      bottomNavigationBar: BottomAppBar(
+        notchMargin: 5,
+        shape: const CircularNotchedRectangle(),
+        color: Colors.grey[900],
+        padding: EdgeInsets.only(left: 30,right: 30),
         height: 50,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -29,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 },
                 child: Icon(
-                  FontAwesomeIcons.house,
+                  FontAwesomeIcons.houseChimneyWindow,
                   color: pageIdx == 1 ? Colors.blue : Colors.white,
                   size: 20,
                 ),
@@ -47,13 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ),
                 child: Text("We",style: TextStyle(color: pageIdx == 0 ? Colors.blue : Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    pageIdx = 2;
-                  });
-                },
-                child: CustomIcon(),
+              SizedBox(
+                width: 30,
               ),
               GestureDetector(
                 onTap: () {
@@ -79,22 +78,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 20,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    pageIdx = 5;
-                  });
-                },
-                child: Icon(
-                  FontAwesomeIcons.userAstronaut,
-                  color: pageIdx == 5 ? Colors.blue : Colors.white,
-                  size: 20,
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     setState(() {
+              //       pageIdx = 5;
+              //     });
+              //   },
+              //   child: Icon(
+              //     FontAwesomeIcons.userAstronaut,
+              //     color: pageIdx == 5 ? Colors.blue : Colors.white,
+              //     size: 20,
+              //   ),
+              // ),
             ],
           ),
       ),
       body: pages[pageIdx],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.transparent,
+        onPressed: () {
+          setState(() {
+            pageIdx = 2;
+          });
+        },
+        child: CustomIcon(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

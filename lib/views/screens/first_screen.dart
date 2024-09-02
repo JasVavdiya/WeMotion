@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wemotions/controllers/home_controller.dart';
 import 'package:get/get.dart';
 import 'package:wemotions/views/screens/SingleVideoScreen.dart';
+import 'package:wemotions/views/screens/profile_screen.dart';
+
+import '../../constants.dart';
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({super.key});
@@ -31,6 +35,29 @@ class _FirstScreenState extends State<FirstScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Top Motion"),
+        backgroundColor: Colors.black,
+        actions: [ Padding(
+          padding: EdgeInsets.only(right: 20),
+          child: GestureDetector(
+            onTap: () {
+              // setState(() {
+              //   pageIdx = 5;
+              // });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen(uid: authController.user.uid)),
+              );
+            },
+            child: Icon(
+              FontAwesomeIcons.userAstronaut,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        )],
+      ),
       body: SafeArea(
         child: _userProfilesWithVideos.length == 0
             ? Center(

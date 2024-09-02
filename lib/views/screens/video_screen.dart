@@ -4,7 +4,6 @@ import 'package:wemotions/constants.dart';
 import 'package:wemotions/controllers/video_controller.dart';
 import 'package:wemotions/views/screens/SingleVideoScreen.dart';
 import 'package:wemotions/views/screens/comment_screen.dart';
-import 'package:wemotions/views/widgets/video_player_iten.dart';
 import 'package:get/get.dart';
 
 class VideoScreen extends StatelessWidget {
